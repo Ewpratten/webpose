@@ -30,7 +30,7 @@ document.getElementById("viz").appendChild(renderer.domElement);
 var socket = io();
 
 // D2R
-function degrees_to_radians(degrees) {
+function d2r(degrees) {
   var pi = Math.PI;
   return degrees * (pi / 180);
 }
@@ -55,9 +55,9 @@ socket.on("phone_to_desktop_data", function (data) {
 
   // Edit the phone viz pose
   // Y & Z are flipped
-  phone.rotation.x = data.x;
-  phone.rotation.y = data.y;
-  phone.rotation.z = data.z;
+  phone.rotation.x = d2r(Math.min(Math.max(data.x + 180 + 90, 0), 360));
+  phone.rotation.y = d2r(Math.min(Math.max(data.y + 180, 0), 360));
+  phone.rotation.z = d2r(Math.min(Math.max(360 - data.z, 0), 360));
 
   mesh.rotation.x = phone.rotation.x;
   mesh.rotation.y = phone.rotation.y;

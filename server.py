@@ -7,6 +7,8 @@ app = Flask(__name__)
 # app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
+DEBUG=False
+
 ## Index ##
 
 @app.route("/")
@@ -72,13 +74,21 @@ def handlePhonePose(message):
     # Build data struct
     # Also adapts from sensor to pose coordinates
     pose_data = {
-        "z": min(max(round(math.radians(360 - message["alpha"]), 4),0),math.radians(360)),
-        "x": min(max(round(math.radians(message["beta"] + 180 + 90), 4),0),math.radians(360)),
-        "y": min(max(round(math.radians(message["gamma"] + 180), 4),0),math.radians(360)),
+        "z": message["alpha"],
+        "x": message["beta"],
+        "y": message["gamma"],
     }
 
     # re-broadcast to desktop
     emit("phone_to_desktop_data", pose_data, broadcast=True)
+
+    # Handle debug
+    if DEBUG:
+        pose_data_debug = {
+        "z": round(360 - message["alpha"], 4),
+        "x": round(message["beta"] + 180 + 90, 4),
+        "y": round(message["gamma"] + 180, 4),
+    }
     # print(pose_data)
 
 if __name__ == '__main__':
