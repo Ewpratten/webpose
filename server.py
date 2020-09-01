@@ -79,6 +79,7 @@ def handlePhonePose(message):
 
     # re-broadcast to desktop
     emit("phone_to_desktop_data", pose_data, broadcast=True)
+    # print(pose_data)
 
 if __name__ == '__main__':
     print("Starting webserver on http://0.0.0.0:5000")
